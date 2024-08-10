@@ -35,11 +35,11 @@ namespace TestVadarod.Controllers
             {
                 var rates = await _currencyRateService.Add(date);
 
-                if(rates == null)
+                if (rates == null)
                     return Ok("Rates have already been added before");
 
                 _logger.LogInformation("Rates added for the specified date");
-                
+
                 return Ok("Rates added");
             }
             catch (Exception ex)
@@ -66,14 +66,14 @@ namespace TestVadarod.Controllers
         /// <param name="cur_Id">Currency code</param>
         /// <param name="date">Date for the exchange rate</param>
         /// <returns></returns>
-        [HttpGet("cur_ID/{cur_Id}/date/{date}")] 
-        public async Task<IActionResult> Get(int cur_Id,DateTime date)
+        [HttpGet("cur_ID/{cur_Id}/date/{date}")]
+        public async Task<IActionResult> Get(int cur_Id, DateTime date)
         {
             try
             {
                 var rate = await _currencyRateService.GetByCurrencyAndDate(cur_Id, date);
 
-                if(rate == null)
+                if (rate == null)
                 {
                     _logger.LogInformation($"Params: {date}; {cur_Id} were not found");
 
