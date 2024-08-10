@@ -5,8 +5,8 @@ using TestVadarod.Services;
 using TestVadarod.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Serilog.Sinks.File;
-    
+using System.Reflection;
+
 namespace TestVadarod
 {
     public class Program
@@ -16,18 +16,21 @@ namespace TestVadarod
             var builder = WebApplication.CreateBuilder(args);
             string connection = builder.Configuration.GetConnectionString("Database");
 
-            // траблы с DateTime.Date.Kind postgres принимает только Utc
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             builder.Host
              .UseSerilog((ctx, lc) => lc
              .WriteTo.Console()
              .ReadFrom.Configuration(ctx.Configuration));
-            // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                var basePath = AppContext.BaseDirectory;
+
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
 
             builder.Services.AddDbContext<CurrencyRateDbContext>(options => options.UseNpgsql(connection));
             builder.Services.AddHttpClient<Rate>();
@@ -37,7 +40,6 @@ namespace TestVadarod
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

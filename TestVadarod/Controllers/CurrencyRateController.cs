@@ -14,7 +14,21 @@ namespace TestVadarod.Controllers
             _logger = logger;
         }
 
-        [HttpGet("date/{date}")]
+        /// <summary>
+        /// add a currency rate
+        /// </summary>
+        /// <remarks>
+        /// Request Example:
+        ///
+        ///     POST /Todo
+        ///     {
+        ///        date : 2020-12-12
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="date">The currency rates for a specific date</param>
+        /// <returns></returns>
+        [HttpPost("date/{date}")]
         public async Task<IActionResult> Post(DateTime date)
         {
             try
@@ -36,6 +50,22 @@ namespace TestVadarod.Controllers
             }
         }
 
+        /// <summary>
+        /// currency rate output by date
+        /// </summary>
+        /// <remarks>
+        /// Request Example:
+        ///
+        ///     POST /Todo
+        ///     {
+        ///        cur_id: 302
+        ///        date : 2020-12-12
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="cur_Id">Currency code</param>
+        /// <param name="date">Date for the exchange rate</param>
+        /// <returns></returns>
         [HttpGet("cur_ID/{cur_Id}/date/{date}")] 
         public async Task<IActionResult> Get(int cur_Id,DateTime date)
         {
